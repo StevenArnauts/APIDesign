@@ -24,7 +24,7 @@ namespace Server.Controllers {
 			this._orderFactory = orderFactory;
 		}
 
-		[Route("")]
+		[Route("", Name = "CUSTOMERS_ALL")]
 		[HttpGet]
 		public IEnumerable<CustomerRepresentation> All() {
 			return (this._customerRepository.All().Select(this._mapper.Map<CustomerRepresentation>));

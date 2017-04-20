@@ -25,10 +25,14 @@ namespace Server.Controllers {
 			this._orderRepository = orderRepository;
 		}
 
-		[Route("")]
+		[Route("", Name = "ORDERS_ALL")]
 		[HttpGet]
 		public IEnumerable<OrderRepresentation> All() {
-			return (this._orderRepository.All().Select(this._mapper.Map<OrderRepresentation>));
+			return (this._orderRepository.All().Select(o => {
+				OrderRepresentation representation = this._mapper.Map<OrderRepresentation>(o);
+				representation.HyperMedia.Factory = new OrderHyperMediaFactory(this.Request, o).Setup;
+				return representation;
+			}));
 		}
 
 		[Route("{orderId}", Name = "ORDERS_GET")]
