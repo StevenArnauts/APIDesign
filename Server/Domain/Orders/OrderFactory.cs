@@ -7,7 +7,7 @@ namespace Server.Domain {
 
 	public interface IOrderFactory : IFactory {
 
-		Order Create(Customer customer, string description, DateTimeOffset date);
+		Order Create(Customer customer, string description, DateTimeOffset? date);
 
 	}
 
@@ -15,11 +15,12 @@ namespace Server.Domain {
 
 		public OrderFactory(IUnitOfWork<IDatabaseContext> unitOfWork) : base(unitOfWork) {}
 
-		public Order Create(Customer customer, string description, DateTimeOffset date) {
+		public Order Create(Customer customer, string description, DateTimeOffset? date) {
+			DateTimeOffset d = date ?? DateTimeOffset.Now;
 			OrderEntity entity = new OrderEntity {
 				Description = description,
 				Customer = customer.Entity,
-				Date = date,
+				Date = d,
 				Amount = 0,
 				State = OrderState.Created
 			};

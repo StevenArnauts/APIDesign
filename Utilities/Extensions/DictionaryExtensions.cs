@@ -39,7 +39,7 @@ namespace Utilities {
 			if (!target.ContainsKey(key)) {
 				target[key] = item;
 				return (true);
-			}
+			} 
 			return (false);
 		}
 

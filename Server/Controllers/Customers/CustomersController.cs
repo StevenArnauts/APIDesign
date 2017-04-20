@@ -8,7 +8,7 @@ using Server.Domain;
 namespace Server.Controllers {
 
 	[RoutePrefix("customers")]
-	public class CustomersController : ApiController {
+	public class CustomersController : BaseController {
 
 		private readonly ICustomerFactory _customerFactory;
 		private readonly ICustomerRepository _customerRepository;

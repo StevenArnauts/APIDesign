@@ -18,7 +18,7 @@ namespace Server {
 			try {
 				await this._next(environment);
 				message += " : " + environment["owin.ResponseStatusCode"];
-				Logger.Info(this, message);
+				Logger.Debug(this, message);
 			} catch (Exception ex) {
 				Logger.Error(this, message, ex);
 			}

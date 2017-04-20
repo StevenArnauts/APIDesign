@@ -6,7 +6,7 @@ using Utilities;
 namespace Server.Controllers {
 
 	[RoutePrefix("messages")]
-	public class MessagesController : ApiController {
+	public class MessagesController : BaseController {
 
 		private static readonly Sequence sequence = new Sequence(1);
 		private static readonly List<MessageRepresentation> messages = new List<MessageRepresentation>();

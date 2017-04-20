@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Threading.Tasks;
 using System.Web.Http;
+using Autofac;
 using Microsoft.AspNet.SignalR;
-using Microsoft.Owin;
 using Microsoft.Owin.Cors;
 using Owin;
 using Server.Configuration;
@@ -21,7 +18,7 @@ namespace Server {
 				Logger.Info(this, "Configuring...");
 				app.UseCors(CorsOptions.AllowAll);
 				app.Use<OwinRequestLogger>();
-				ConfigureSignalR(app);
+				//ConfigureSignalR(app);
 				ConfigureWebApi(app);
 				Logger.Info(this, "Configured");
 			} catch (Exception ex) {
@@ -31,8 +28,12 @@ namespace Server {
 
 		private static void ConfigureWebApi(IAppBuilder app) {
 			HttpConfiguration configuration = WebApiConfig.Create();
-			ContainerConfig.Configure(configuration);
-			app.Map("/api", map => { map.UseWebApi(configuration); });
+			IContainer container = ContainerConfig.Configure(configuration);
+			app.Map("/api", map => {
+				app.UseAutofacMiddleware(container);
+				map.UseAutofacWebApi(configuration);
+				map.UseWebApi(configuration);
+			});
 		}
 
 		private static void ConfigureSignalR(IAppBuilder app) {

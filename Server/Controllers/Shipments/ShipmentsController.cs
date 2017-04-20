@@ -8,7 +8,7 @@ using Server.Domain;
 namespace Server.Controllers {
 
 	[RoutePrefix("shipments")]
-	public class ShipmentsController : ApiController {
+	public class ShipmentsController : BaseController {
 
 		private readonly IShipmentRepository _shipmentRepository;
 		private readonly IMapper _mapper;

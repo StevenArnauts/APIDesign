@@ -10,7 +10,7 @@ using Utilities;
 namespace Server.Controllers {
 
 	[RoutePrefix("orders")]
-	public class OrdersController : ApiController {
+	public class OrdersController : BaseController {
 
 		private readonly IMapper _mapper;
 		private readonly OrderConfirmationService _orderConfirmationService;
@@ -86,9 +86,13 @@ namespace Server.Controllers {
 			representation.Links.AddSafe("self", new Link {
 				Href = this.Link("ORDERS_GET", new { orderId = this._order.Id })
 			});
-			representation.Links.AddSafe("invoice", new Link {
-				Href = this.Link("INVOICES_GET", new { invoiceId = this._order.Invoices.First().Id })
-			});
+			LinkCollection invoiceLinks = new LinkCollection();
+			this._order.Invoices.ForEach(i => invoiceLinks.AddLast(new Link {
+				Href = this.Link("INVOICES_GET", new {
+					invoiceId = this._order.Invoices.First().Id
+				})
+			}));
+			representation.Links.AddSafe("invoices", invoiceLinks);
 		}
 
 	}

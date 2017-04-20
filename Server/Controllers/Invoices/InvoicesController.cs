@@ -12,7 +12,7 @@ using Invoice = Server.Domain.Invoice;
 namespace Server.Controllers {
 
 	[RoutePrefix("invoices")]
-	public class InvoicesController : ApiController {
+	public class InvoicesController : BaseController {
 
 		private readonly InvoicePaymentService _invoicePaymentService;
 

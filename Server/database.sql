@@ -3,6 +3,7 @@ GO
 
 DROP TABLE [dbo].[Payment];
 DROP TABLE [dbo].[Invoice];
+DROP TABLE [dbo].[InvoiceState];
 DROP TABLE [dbo].[Shipment];
 DROP TABLE [dbo].[OrderLine];
 DROP TABLE [dbo].[Order];

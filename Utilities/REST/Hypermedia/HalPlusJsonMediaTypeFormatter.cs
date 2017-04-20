@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Net.Http.Headers;
-using Utilities.Logging;
 
 namespace Utilities {
 
@@ -18,7 +17,6 @@ namespace Utilities {
 
 		public override bool CanReadType(Type type) {
 			bool canRead = type.IsSubclassOf(typeof(Representation));
-			Logger.Debug("can read " + type.FullName + " : " + canRead);
 			return (canRead);
 		}
 
@@ -26,7 +24,6 @@ namespace Utilities {
 			bool isListOfRepresentationOrSubtype = type.IsListOf(typeof(Representation));
 			bool isTypeOrSubTypeOfRepresentation = type.IsSubclassOf(typeof(Representation));
 			bool canWrite = isListOfRepresentationOrSubtype || isTypeOrSubTypeOfRepresentation;
-			Logger.Debug("can write " + type.FullName + " : " + canWrite);
 			return (canWrite);
 		}
 

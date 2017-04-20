@@ -11,29 +11,25 @@ namespace Service.Persistence {
 
 		private readonly IDbContextFactory<DatabaseContext> _factory = new DatabaseContextFactory();
 		private readonly object _lock = new object();
-		private IDatabaseContext _context;
+		private readonly IDatabaseContext _context;
 		private bool _isDisposed;
+
+		public UnitOfWork() {
+			DatabaseContext context = this._factory.Create();
+			context.Database.Log = this.LogSql;
+			this._context = context;
+		}
 
 		public IDatabaseContext Context {
 			get {
-				if (this._context == null) {
-					lock (this._lock) {
-						if (this._context == null) {
-							DatabaseContext context = this._factory.Create();
-							context.Database.Log = this.LogSql;
-							this._context = context;
-						}
-					}
-				}
 				return (this._context);
 			}
 		}
 
 		public void SaveChanges() {
-			if (this._context != null) {
-				this._context.SaveChanges();
-			}
-			Logger.Debug("Saved " + this.GetType().Name + " " + this.GetHashCode());
+			Logger.Debug("Saving " + this);
+			this._context.SaveChanges();
+			Logger.Debug("Saved " + this);
 		}
 
 		public void Dispose() {
@@ -61,16 +57,14 @@ namespace Service.Persistence {
 		}
 
 		protected virtual void Dispose(bool disposing) {
+			Logger.Debug("Disposing " + this + "...");
 			lock (this._lock) {
 				if (!this._isDisposed) {
 					if (disposing) {
-						this.SaveChanges();
-						if (this._context != null) {
-							this._context.Dispose();
-						}
+						this._context.Dispose();
 					}
 					this._isDisposed = true;
-					Logger.Debug("Disposed " + this.GetType().Name + " " + this.GetHashCode() + "...");
+					Logger.Debug("Disposed " + this + "...");
 				} else {
 					Logger.Debug(this.GetType().Name + " " + this.GetHashCode() + " is already disposed");
 				}

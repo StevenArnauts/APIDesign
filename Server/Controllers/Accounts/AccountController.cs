@@ -2,14 +2,13 @@
 using System.Security.Authentication;
 using System.Text;
 using System.Web.Http;
-using Server.Controllers;
 using Newtonsoft.Json;
 using Server.Domain;
 
 namespace Server.Controllers {
 
 	[RoutePrefix("account")]
-	public class AccountController : ApiController {
+	public class AccountController : BaseController {
 
 		private readonly IUserRepository _userRepository;
 
