@@ -1,14 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿//using System.Collections.Generic;
+//using System.Linq;
 
-namespace Utilities.REST {
+//namespace Utilities.REST {
 
-	public class LinkCollection : LinkedList<Link> {
+//	public class LinkCollection : LinkedList<Link> {
 
-		public bool ContainsLinkName(string name) {
-			return (this.Any(l => l.Name == name));
-		}
+//		public bool ContainsLinkName(string name) {
+//			return (this.Any(l => l.Name == name));
+//		}
 
-	}
+//	}
 
-}
+//}

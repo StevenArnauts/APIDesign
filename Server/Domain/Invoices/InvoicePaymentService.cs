@@ -11,8 +11,9 @@ namespace Server.Domain {
 			this._shipmentFactory = shipmentFactory;
 		}
 
-		public Payment AddPayment(Invoice invoice, decimal amount, DateTimeOffset date) {
-			Payment payment = invoice.AddPayment(date, amount);
+		public Payment AddPayment(Invoice invoice, decimal amount, DateTimeOffset? date) {
+			DateTimeOffset d = date ?? DateTimeOffset.Now;
+			Payment payment = invoice.AddPayment(d, amount);
 			if (invoice.State == InvoiceState.Paid) {
 				this._shipmentFactory.Create(invoice.Order, DateTimeOffset.Now);
 			}

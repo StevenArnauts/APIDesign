@@ -19,7 +19,6 @@ namespace Server.Domain {
 				Name = name
 			};
 			this.UnitOfWork.Context.Customers.Add(entity);
-			this.UnitOfWork.Context.SaveChanges();
 			return new Customer(entity);
 		}
 

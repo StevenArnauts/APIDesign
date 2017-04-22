@@ -24,39 +24,40 @@ namespace Server.Controllers {
 			this._orderFactory = orderFactory;
 		}
 
-		[Route("", Name = "CUSTOMERS_ALL")]
+		[Route("", Name = "CUSTOMER_ALL")]
 		[HttpGet]
 		public IEnumerable<CustomerRepresentation> All() {
-			return (this._customerRepository.All().Select(this._mapper.Map<CustomerRepresentation>));
+			return (this._customerRepository.All().Select(c => this._mapper.Map<CustomerRepresentation>(c).SetupHyperMediaFactory(c, this)));
 		}
 
-		[Route("{customerId}")]
+		[Route("{customerId}", Name = "CUSTOMER_GET")]
 		[HttpGet]
 		public CustomerRepresentation Get(Guid customerId) {
-			return (this._mapper.Map<CustomerRepresentation>(this._customerRepository.Get(customerId)));
+			Customer customer = this._customerRepository.Get(customerId);
+			return (this._mapper.Map<CustomerRepresentation>(customer).SetupHyperMediaFactory(customer, this));
 		}
 
-		[Route("")]
+		[Route("", Name = "CUSTOMER_ADD")]
 		[HttpPost]
 		public CustomerRepresentation New(CustomerSpecification spec) {
 			Customer customer = this._customerFactory.Create(spec.Name);
-			return (this._mapper.Map<CustomerRepresentation>(customer));
+			return (this._mapper.Map<CustomerRepresentation>(customer).SetupHyperMediaFactory(customer, this));
 		}
 
-		[Route("{customerId}/orders")]
+		[Route("{customerId}/orders", Name = "CUSTOMER_ORDERS_ADD")]
 		[HttpPost]
 		public OrderRepresentation AddOrder(Guid customerId, OrderSpecification spec) {
 			Customer customer = this._customerRepository.Get(customerId);
 			Order order = this._orderFactory.Create(customer, spec.Description, spec.Date);
-			return (this._mapper.Map<OrderRepresentation>(order));
+			return (this._mapper.Map<OrderRepresentation>(order).SetupHyperMediaFactory(order, this));
 		}
 
-		[Route("{customerId}/orders")]
+		[Route("{customerId}/orders", Name = "CUSTOMER_ORDERS_ALL")]
 		[HttpGet]
 		public IEnumerable<OrderRepresentation> GetOrders(Guid customerId) {
 			Customer customer = this._customerRepository.Get(customerId);
 			IEnumerable<Order> orders = this._orderRepository.FindByCustomer(customer);
-			return (orders.Select(this._mapper.Map<OrderRepresentation>));
+			return (orders.Select(o => this._mapper.Map<OrderRepresentation>(o).SetupHyperMediaFactory(o, this)));
 		}
 
 	}

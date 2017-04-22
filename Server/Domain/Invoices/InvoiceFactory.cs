@@ -21,7 +21,6 @@ namespace Server.Domain {
 				Date = date
 			};
 			this.UnitOfWork.Context.Invoices.Add(entity);
-			this.UnitOfWork.Context.SaveChanges();
 			return new Invoice(entity);
 		}
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using Newtonsoft.Json;
 
 namespace Utilities {
@@ -7,7 +8,6 @@ namespace Utilities {
 	public class HyperMediaSettings {
 
 		public Action<Representation> Factory { get; set; }
-
 		public bool Include { get; set; }
 
 	}
@@ -21,20 +21,27 @@ namespace Utilities {
 
 		[JsonProperty("_links")]
 		public Dictionary<string, ILinkContainer> Links { get; }
-		
+
+		[JsonIgnore]
+		public HyperMediaSettings HyperMedia { get; set; }
+
 		public bool ShouldSerializeLinks() {
 			return (this.HyperMedia.Include && this.Links.Count > 0);
 		}
 
-		[JsonIgnore]
-		public HyperMediaSettings HyperMedia { get; set; }
-		
-		public void AddActionLink(string name, Link link) {
-			//LinkCollection actionLinks = new LinkCollection();
-			//if (!this.Links.ContainsKey("actions")) {
-			//	this.Links["actions"] = actionLinks;
-			//}
+		public ILinkContainer AddLink(string name, ILinkContainer link) {
+			this.Links.Add(name, link);
+			return (link);
+		}
+
+		public ILinkContainer AddLink(string name, string href) {
+			return (this.AddLink(name, href, HttpMethod.Get));
+		}
+
+		public ILinkContainer AddLink(string name, string href, HttpMethod method) {
+			Link link = new Link(href, method);
 			this.Links.AddSafe(name, link);
+			return (link);
 		}
 
 	}

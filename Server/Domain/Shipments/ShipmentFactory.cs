@@ -21,7 +21,6 @@ namespace Server.Domain {
 				Date = date
 			};
 			this.UnitOfWork.Context.Shipments.Add(entity);
-			this.UnitOfWork.Context.SaveChanges();
 			return new Shipment(entity);
 		}
 

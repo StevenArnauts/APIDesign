@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Web.Http;
 using AutoMapper;
 using Server.Domain;
@@ -25,23 +24,17 @@ namespace Server.Controllers {
 			this._orderRepository = orderRepository;
 		}
 
-		[Route("", Name = "ORDERS_ALL")]
+		[Route("", Name = "ORDER_ALL")]
 		[HttpGet]
 		public IEnumerable<OrderRepresentation> All() {
-			return (this._orderRepository.All().Select(o => {
-				OrderRepresentation representation = this._mapper.Map<OrderRepresentation>(o);
-				representation.HyperMedia.Factory = new OrderHyperMediaFactory(this.Request, o).Setup;
-				return representation;
-			}));
+			return (this._orderRepository.All().Select(o => this._mapper.Map<OrderRepresentation>(o).SetupHyperMediaFactory(o, this)));
 		}
 
-		[Route("{orderId}", Name = "ORDERS_GET")]
+		[Route("{orderId}", Name = "ORDER_GET")]
 		[HttpGet]
 		public OrderDetailRepresentation Get(Guid orderId) {
 			Order order = this._orderRepository.Get(orderId);
-			OrderDetailRepresentation representation = this._mapper.Map<OrderDetailRepresentation>(order);
-			representation.HyperMedia.Factory = new OrderHyperMediaFactory(this.Request, order).Setup;
-			return representation;
+			return (this._mapper.Map<OrderDetailRepresentation>(order).SetupHyperMediaFactory(order, this));
 		}
 
 		[Route("{orderId}/lines")]
@@ -73,33 +66,9 @@ namespace Server.Controllers {
 		public OrderDetailRepresentation Confirm(Guid orderId) {
 			Order order = this._orderRepository.Get(orderId);
 			this._orderConfirmationService.ConfirmOrder(order);
-			return (this._mapper.Map<OrderDetailRepresentation>(order));
+			return (this._mapper.Map<OrderDetailRepresentation>(order).SetupHyperMediaFactory(order, this));
 		}
 
 	}
-
-	public class OrderHyperMediaFactory : HyperMediaFactory {
-
-		private readonly Order _order;
-
-		public OrderHyperMediaFactory(HttpRequestMessage request, Order order) : base(request) {
-			this._order = order;
-		}
- 
-		public void Setup(Representation representation) {
-			representation.Links.AddSafe("self", new Link {
-				Href = this.Link("ORDERS_GET", new { orderId = this._order.Id })
-			});
-			LinkCollection invoiceLinks = new LinkCollection();
-			this._order.Invoices.ForEach(i => invoiceLinks.AddLast(new Link {
-				Href = this.Link("INVOICES_GET", new {
-					invoiceId = this._order.Invoices.First().Id
-				})
-			}));
-			representation.Links.AddSafe("invoices", invoiceLinks);
-		}
-
-	}
-
 
 }

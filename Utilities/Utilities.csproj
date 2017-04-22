@@ -99,7 +99,9 @@
     <Compile Include="REST\HttpResult.cs" />
     <Compile Include="REST\Hypermedia\BaseJsonMediaTypeFormatter.cs" />
     <Compile Include="REST\Hypermedia\HalPlusJsonMediaTypeFormatter.cs" />
+    <Compile Include="REST\Hypermedia\ILinkContainer.cs" />
     <Compile Include="REST\Hypermedia\Link.cs" />
+    <Compile Include="REST\Hypermedia\LinkCollection.cs" />
     <Compile Include="REST\Hypermedia\Representation.cs" />
     <Compile Include="REST\IdConstraint.cs" />
     <Compile Include="REST\IJsonHttpClientSerializer.cs" />

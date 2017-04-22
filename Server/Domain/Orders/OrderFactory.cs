@@ -25,7 +25,6 @@ namespace Server.Domain {
 				State = OrderState.Created
 			};
 			this.UnitOfWork.Context.Orders.Add(entity);
-			this.UnitOfWork.Context.SaveChanges();
 			return new Order(entity);
 		}
 
